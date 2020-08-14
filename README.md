@@ -74,3 +74,6 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 
 ### Reference for base layout with Material UI and theme switcher
 https://github.com/infonomic/material-ui-theme-switcher
+
+### Tree view
+https://github.com/frontend-collective/react-sortable-tree

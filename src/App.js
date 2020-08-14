@@ -7,6 +7,7 @@ import {
 import SwitchUI from '@material-ui/core/Switch'
 import { CustomThemeContext } from './themes/CustomThemeProvider'
 import EntitiesList from './EntitiesList'
+import Hierarchy from './Hierarchy'
 
 const drawerWidth = 350
 
@@ -72,6 +73,7 @@ export default function App() {
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
+        <Hierarchy />
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum

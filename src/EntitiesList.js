@@ -22,11 +22,11 @@ export default function EntitiesList() {
   useEffect(() => {
     entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))];
     console.log(JSON.stringify(entityTypes));
-    setSelectedEntityType(entityTypes[0]);
   });
 
   useEffect(() => {
     setEntities(entitiesData);
+    setSelectedEntityType(entityTypes[0]);
   }, []);
 
   const handleListItemClick = (event, index) => {
@@ -35,6 +35,7 @@ export default function EntitiesList() {
   };
 
   const handleEntityTypeChange = (event) => {
+    console.log(event.target.value);
     setSelectedEntityType(event.target.value);
   };
 
@@ -48,14 +49,6 @@ export default function EntitiesList() {
       <ListItemText primary={entity.Name} />
     </ListItem>;
 
-  const EntityTypeMenuItem = ({ entityType, index }) =>
-    <MenuItem
-      className="entityTypeMenuItem"
-      value={entityType}
-    >
-      {entityType}
-    </MenuItem>;
-
   return (
     <div className={classes.drawerContainer}>
       <Select
@@ -65,11 +58,13 @@ export default function EntitiesList() {
         onChange={handleEntityTypeChange}
       >
         {entityTypes.map((entityType, index) => (
-          <EntityTypeMenuItem 
+          <MenuItem
             key={index}
-            index={index}
-            entityType={entityType}
-          />
+            className="entityTypeMenuItem"
+            value={entityType}
+          >
+            {entityType}
+          </MenuItem>
         ))}
       </Select>
       <List>

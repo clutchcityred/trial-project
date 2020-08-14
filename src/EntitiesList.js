@@ -3,6 +3,7 @@ import {
   makeStyles, Divider, List,
   ListItem, ListItemText, Select, MenuItem
 } from '@material-ui/core'
+import _ from 'lodash';
 import entitiesData from './data/entities.json';
 
 const useStyles = makeStyles(() => ({
@@ -17,33 +18,36 @@ export default function EntitiesList() {
   const classes = useStyles()
   const [entities, setEntities] = useState([]);
   const [selectedEntityType, setSelectedEntityType] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
 
   useEffect(() => {
     entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))];
-    console.log(JSON.stringify(entityTypes));
   });
 
   useEffect(() => {
-    setEntities(entitiesData);
     setSelectedEntityType(entityTypes[0]);
+    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityTypes[0]]);
+    setEntities(filteredEntitiesData);
   }, []);
 
   const handleListItemClick = (event, index) => {
     console.log(index)
-    setSelectedIndex(index);
+    setSelectedEntityIndex(index);
   };
 
   const handleEntityTypeChange = (event) => {
-    console.log(event.target.value);
-    setSelectedEntityType(event.target.value);
+    let newSelectedEntityType = event.target.value;
+    console.log(newSelectedEntityType);
+    setSelectedEntityType(newSelectedEntityType);
+    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType]);
+    setEntities(filteredEntitiesData);
   };
 
   const EntityListItem = ({ entity, index }) =>
     <ListItem
       className="entity"
       button
-      selected={selectedIndex === entity.index}
+      selected={selectedEntityIndex === entity.index}
       onClick={(event) => handleListItemClick(event, index)}
     >
       <ListItemText primary={entity.Name} />
@@ -68,13 +72,13 @@ export default function EntitiesList() {
         ))}
       </Select>
       <List>
-        {/* {entities.map((entity, index) => (
+        {entities.map((entity, index) => (
           <EntityListItem
             key={index}
             index={index}
             entity={entity}
           />
-        ))} */}
+        ))}
       </List>
     </div>
   )

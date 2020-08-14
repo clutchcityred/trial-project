@@ -14,15 +14,23 @@ const useStyles = makeStyles(() => ({
 export default function EntitiesList() {
   const classes = useStyles()
   const [entities, setEntities] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     setEntities(entitiesData);
   }, []);
 
-  const EntityListItem = ({ entity }) =>
+  const handleListItemClick = (event, index) => {
+    console.log(index)
+    setSelectedIndex(index);
+  };
+
+  const EntityListItem = ({ entity, index }) =>
     <ListItem
       className="entity"
       button
+      selected={selectedIndex === entity.index}
+      onClick={(event) => handleListItemClick(event, index)}
     >
       <ListItemText primary={entity.Name} />
     </ListItem>;

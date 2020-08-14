@@ -6,7 +6,7 @@ import {
 
 import SwitchUI from '@material-ui/core/Switch'
 import { CustomThemeContext } from './themes/CustomThemeProvider'
-import Sidebar from './Sidebar'
+import EntitiesList from './EntitiesList'
 
 const drawerWidth = 350
 
@@ -68,7 +68,7 @@ export default function App() {
         }}
       >
         <Toolbar />
-        <Sidebar />
+        <EntitiesList />
       </Drawer>
       <main className={classes.content}>
         <Toolbar />

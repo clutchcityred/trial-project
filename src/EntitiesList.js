@@ -31,7 +31,6 @@ export default function EntitiesList() {
   }, []);
 
   const handleListItemClick = (event, index) => {
-    console.log(index)
     setSelectedEntityIndex(index);
   };
 
@@ -40,13 +39,14 @@ export default function EntitiesList() {
     setSelectedEntityType(newSelectedEntityType);
     let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType]);
     setEntities(filteredEntitiesData);
+    setSelectedEntityIndex(0);
   };
 
   const EntityListItem = ({ entity, index }) =>
     <ListItem
       className="entity"
       button
-      selected={selectedEntityIndex === entity.index}
+      selected={selectedEntityIndex === index}
       onClick={(event) => handleListItemClick(event, index)}
     >
       <ListItemText primary={entity.Name} />

@@ -21,7 +21,7 @@ export default function EntitiesList() {
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
 
   useEffect(() => {
-    entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))];
+    entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
   });
 
   useEffect(() => {

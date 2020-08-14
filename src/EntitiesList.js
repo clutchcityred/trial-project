@@ -37,7 +37,6 @@ export default function EntitiesList() {
 
   const handleEntityTypeChange = (event) => {
     let newSelectedEntityType = event.target.value;
-    console.log(newSelectedEntityType);
     setSelectedEntityType(newSelectedEntityType);
     let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType]);
     setEntities(filteredEntitiesData);

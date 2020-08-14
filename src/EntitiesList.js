@@ -11,10 +11,17 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
+let entityTypes = [];
+
 export default function EntitiesList() {
   const classes = useStyles()
   const [entities, setEntities] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))];
+    console.log(JSON.stringify(entityTypes));
+  });
 
   useEffect(() => {
     setEntities(entitiesData);
@@ -38,13 +45,13 @@ export default function EntitiesList() {
   return (
     <div className={classes.drawerContainer}>
       <List>
-        {entities.map((entity, index) => (
+        {/* {entities.map((entity, index) => (
           <EntityListItem
             key={index}
             index={index}
             entity={entity}
           />
-        ))}
+        ))} */}
       </List>
     </div>
   )

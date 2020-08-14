@@ -19,19 +19,22 @@ export default function EntitiesList() {
   const [entities, setEntities] = useState([]);
   const [selectedEntityType, setSelectedEntityType] = useState("");
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
+  const [selectedEntity, setSelectedEntity] = useState("");
 
   useEffect(() => {
     entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
   });
 
   useEffect(() => {
-    setSelectedEntityType(entityTypes[0]);
-    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityTypes[0]]);
+    setSelectedEntityType(entityTypes[selectedEntityIndex]);
+    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityTypes[selectedEntityIndex]]);
     setEntities(filteredEntitiesData);
+    setSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
   }, []);
 
   const handleListItemClick = (event, index) => {
     setSelectedEntityIndex(index);
+    setSelectedEntity(entities[index]);
   };
 
   const handleEntityTypeChange = (event) => {
@@ -40,6 +43,7 @@ export default function EntitiesList() {
     let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType]);
     setEntities(filteredEntitiesData);
     setSelectedEntityIndex(0);
+    setSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
   };
 
   const EntityListItem = ({ entity, index }) =>

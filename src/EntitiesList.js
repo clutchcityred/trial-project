@@ -12,6 +12,8 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
+const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
+
 let entityTypes = [];
 
 export default function EntitiesList() {
@@ -40,7 +42,8 @@ export default function EntitiesList() {
   const handleEntityTypeChange = (event) => {
     let newSelectedEntityType = event.target.value;
     setSelectedEntityType(newSelectedEntityType);
-    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType]);
+    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType])
+      .sort((a, b) => collator.compare(a.Name, b.Name));
     setEntities(filteredEntitiesData);
     setSelectedEntityIndex(0);
     setSelectedEntity(filteredEntitiesData[selectedEntityIndex]);

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   makeStyles, Drawer, AppBar, Toolbar,
   FormControlLabel, Typography,
@@ -38,6 +38,10 @@ export default function App() {
   const classes = useStyles()
   const { currentTheme, setTheme } = useContext(CustomThemeContext)
   const isDark = Boolean(currentTheme === 'dark')
+  const [selectedEntity, setSelectedEntity] = useState(null);
+  const saveSelectedEntity = (entity) => {
+    setSelectedEntity(entity);
+  }
 
   const handleThemeChange = (event) => {
     const { checked } = event.target
@@ -69,11 +73,11 @@ export default function App() {
         }}
       >
         <Toolbar />
-        <EntitiesList />
+        <EntitiesList saveSelectedEntity={saveSelectedEntity} selectedEntity={selectedEntity} />
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
-        <Hierarchy />
+        <Hierarchy selectedEntity={selectedEntity}/>
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum

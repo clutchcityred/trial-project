@@ -12,14 +12,15 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
+const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
+
 let entityTypes = [];
 
-export default function EntitiesList() {
+export default function EntitiesList({ saveSelectedEntity, selectedEntity }) {
   const classes = useStyles()
   const [entities, setEntities] = useState([]);
   const [selectedEntityType, setSelectedEntityType] = useState("");
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
-  const [selectedEntity, setSelectedEntity] = useState("");
 
   useEffect(() => {
     entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
@@ -29,21 +30,22 @@ export default function EntitiesList() {
     setSelectedEntityType(entityTypes[selectedEntityIndex]);
     let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityTypes[selectedEntityIndex]]);
     setEntities(filteredEntitiesData);
-    setSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
+    saveSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
   }, []);
 
   const handleListItemClick = (event, index) => {
     setSelectedEntityIndex(index);
-    setSelectedEntity(entities[index]);
+    saveSelectedEntity(entities[index]);
   };
 
   const handleEntityTypeChange = (event) => {
     let newSelectedEntityType = event.target.value;
     setSelectedEntityType(newSelectedEntityType);
-    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType]);
+    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType])
+      .sort((a, b) => collator.compare(a.Name, b.Name));
     setEntities(filteredEntitiesData);
     setSelectedEntityIndex(0);
-    setSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
+    saveSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
   };
 
   const EntityListItem = ({ entity, index }) =>
@@ -58,6 +60,11 @@ export default function EntitiesList() {
 
   return (
     <div className={classes.drawerContainer}>
+      {
+        selectedEntity ?
+        <h1>{selectedEntity.Name}</h1>
+        : false
+      }
       <Select
         labelId="entity-type-select-label"
         id="entity-type-select"

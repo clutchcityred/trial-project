@@ -30,7 +30,7 @@ function treeify(list, idAttr, parentAttr, childrenAttr) {
 
 const hierarchies = [hierarchy, hierarchy2];
 
-export default function Hierarchy() {
+export default function Hierarchy({ selectedEntity }) {
   const [selectedHierarchy, setSelectedHierarchy] = useState([]);
   const [treeData, setTreeData] = useState([]);
   const [searchQuery, setSearchQuery] = useState(null);
@@ -77,6 +77,11 @@ export default function Hierarchy() {
 
   return (
     <div style={{ height: 1000 }}>
+      {
+        selectedEntity ?
+          <h1>{selectedEntity.Name}</h1>
+          : false
+      }
       <Select
         labelId="entity-type-select-label"
         id="entity-type-select"
@@ -129,7 +134,7 @@ export default function Hierarchy() {
         treeData={treeData}
         onChange={treeData => setTreeData(treeData)}
         // The query string used in the search. This is required for searching.
-        searchQuery={searchQuery}
+        searchQuery={selectedEntity ? selectedEntity.Name : null}
         //
         // When matches are found, this property lets you highlight a specific
         // match and scroll to it. This is optional.

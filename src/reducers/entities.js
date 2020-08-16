@@ -69,7 +69,7 @@ const initialState = {
     "Block": { displayName: "Block", collectionName: "blocks"},
     "Compartment": { displayName: "Compartment", collectionName: "compartments"},
     "Field": { displayName: "Field", collectionName: "fields"},
-    "Hydrodynamic Unit": { displayName: "Unit", collectionName: "hydrodynamicUnits"},
+    "Hydrodynamic Unit": { displayName: "Hydrodynamic Unit", collectionName: "hydrodynamicUnits"},
     "Layer": { displayName: "Layer", collectionName: "layers"},
     "Section": { displayName: "Section", collectionName: "sections"},
     "Well": { displayName: "Well", collectionName: "wells"}

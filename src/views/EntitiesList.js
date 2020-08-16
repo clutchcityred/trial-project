@@ -12,9 +12,6 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
-let entityTypes = [];
-
 export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveActiveEntities, activeEntities }) {
   const classes = useStyles()
   const storeEntities = useSelector(state => state.entities)
@@ -25,14 +22,11 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
   const [pageSize, setPageSize] = useState(15);
 
   useEffect(() => {
-    entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
-    setPageSize(15);
-  });
-
-  useEffect(() => {
-    setSelectedEntityType(entityTypes[selectedEntityIndex]);
-    saveActiveEntities(storeEntities.assets);
-    saveSelectedEntity(storeEntities.assets[selectedEntityIndex]);
+    let initialEntityType = Object.values(storeEntityTypes)[selectedEntityIndex];
+    setSelectedEntityType(initialEntityType);
+    let storeEntitiesData = storeEntities[initialEntityType.collectionName];
+    saveActiveEntities(storeEntitiesData);
+    saveSelectedEntity(storeEntitiesData[selectedEntityIndex]);
   }, []);
 
   const handlePageChange = (items, currentPage) => {
@@ -46,10 +40,10 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
   };
 
   const handleEntityTypeChange = (event) => {
+    setCurrentPage(1);
     let newSelectedEntityType = event.target.value;
     setSelectedEntityType(newSelectedEntityType);
-    let storeEntityType = storeEntityTypes[newSelectedEntityType];
-    let storeEntitiesData = storeEntities[storeEntityType.collectionName];
+    let storeEntitiesData = storeEntities[newSelectedEntityType.collectionName];
     saveActiveEntities(storeEntitiesData);
     setSelectedEntityIndex(0);
     saveSelectedEntity(storeEntitiesData[selectedEntityIndex]);
@@ -78,13 +72,13 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
         value={selectedEntityType}
         onChange={handleEntityTypeChange}
       >
-        {entityTypes.map((entityType, index) => (
+        {Object.values(storeEntityTypes).map((entityType, index) => (
           <MenuItem
             key={index}
             className="entityTypeMenuItem"
             value={entityType}
           >
-            {entityType}
+            {entityType.displayName}
           </MenuItem>
         ))}
       </Select>
@@ -93,6 +87,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
           list={activeEntities}
           itemsPerPage={pageSize}
           onPageChange={handlePageChange}
+          currentPage={currentPage}
           renderList={(list) => (
             <>
               {list.map((entity, index) => (

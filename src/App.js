@@ -40,14 +40,14 @@ export default function App() {
   const classes = useStyles()
   const { currentTheme, setTheme } = useContext(CustomThemeContext)
   const isDark = Boolean(currentTheme === 'dark')
-  const [selectedTab, setSelectedTab] = useState(1);
+  const [selectedTab, setSelectedTab] = useState(0);
   const [selectedEntity, setSelectedEntity] = useState(null);
   const saveSelectedEntity = (entity) => {
     setSelectedEntity(entity);
   }
-  const [entities, setEntities] = useState([]);
-  const saveEntities = (entities) => {
-    setEntities(entities);
+  const [activeEntities, setActiveEntities] = useState([]);
+  const saveActiveEntities = (activeEntities) => {
+    setActiveEntities(activeEntities);
   }
 
   const handleThemeChange = (event) => {
@@ -83,8 +83,8 @@ export default function App() {
         <EntitiesList
           saveSelectedEntity={saveSelectedEntity}
           selectedEntity={selectedEntity}
-          saveEntities={saveEntities}
-          entities={entities}
+          saveActiveEntities={saveActiveEntities}
+          activeEntities={activeEntities}
         />
       </Drawer>
       <main className={classes.content}>
@@ -110,7 +110,7 @@ export default function App() {
         {selectedTab === 0 && <Hierarchy selectedEntity={selectedEntity} />}
         {selectedTab === 1 && <EntitiesTable
           selectedEntity={selectedEntity}
-          entities={entities}
+          activeEntities={activeEntities}
         />}
         {selectedTab === 2 && <Test />}
       </main>

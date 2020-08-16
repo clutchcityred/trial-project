@@ -11,7 +11,7 @@ import {
 import hierarchy from '../data/hierarchy.json';
 import hierarchy2 from '../data/hierarchy2.json';
 
-export default function EntitiesTable({ selectedEntity, entities }) {
+export default function EntitiesTable({ selectedEntity, activeEntities }) {
 
   useEffect(() => {
     getHierarchyPath(hierarchy, "HierarchyPath");
@@ -22,7 +22,7 @@ export default function EntitiesTable({ selectedEntity, entities }) {
     let hierarchyTree = treeify(hierarchyData.Relationship, 'title', 'parent', 'children');
     let flattenedHierarchy = flattenMyTree(hierarchyTree);
 
-    _.forEach(entities, function(entity) {
+    _.forEach(activeEntities, function(entity) {
       let entityInHierarchy = _.find(flattenedHierarchy, ['title', entity.Name]);
       entity[pathProperty] = entityInHierarchy ? entityInHierarchy.pathname : null;
     })
@@ -44,7 +44,7 @@ export default function EntitiesTable({ selectedEntity, entities }) {
           { title: 'Hierarcy Path', field: 'HierarchyPath' },
           { title: 'Hierarcy 2 Path', field: 'Hierarchy2Path' },
         ]}
-        data={entities}
+        data={activeEntities}
         title="Demo Title"
         icons={tableIcons}
       />

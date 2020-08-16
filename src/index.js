@@ -12,12 +12,12 @@ import { reducers, actions } from './reducers';
 import _ from 'lodash';
 import entitiesData from './data/entities.json';
 
+const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 const loadEntitiesJson = (store) => {
   let entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
   _.forEach(entityTypes, function (entityType) {
-    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityType]);
-    // console.log(entityType);
-    // console.log(filteredEntitiesData);
+    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityType])
+      .sort((a, b) => collator.compare(a.Name, b.Name));;
     switch (entityType) {
       case "Asset": store.dispatch(actions.entities.setAssets(filteredEntitiesData)); break;
       case "Block": store.dispatch(actions.entities.setBlocks(filteredEntitiesData)); break;

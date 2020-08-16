@@ -15,38 +15,36 @@ const useStyles = makeStyles(() => ({
 const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 let entityTypes = [];
 
-export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveEntities, entities }) {
+export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveActiveEntities, activeEntities }) {
   const classes = useStyles()
   const storeEntities = useSelector(state => state.entities)
+  const storeEntityTypes = useSelector(state => state.entities.entityTypes)
   const [selectedEntityType, setSelectedEntityType] = useState("");
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
 
   useEffect(() => {
     entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
-    console.log('storeEntities');
-    console.log(storeEntities);
   });
 
   useEffect(() => {
     setSelectedEntityType(entityTypes[selectedEntityIndex]);
-    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityTypes[selectedEntityIndex]]);
-    saveEntities(filteredEntitiesData);
-    saveSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
+    saveActiveEntities(storeEntities.assets);
+    saveSelectedEntity(storeEntities.assets[selectedEntityIndex]);
   }, []);
 
   const handleListItemClick = (event, index) => {
     setSelectedEntityIndex(index);
-    saveSelectedEntity(entities[index]);
+    saveSelectedEntity(activeEntities[index]);
   };
 
   const handleEntityTypeChange = (event) => {
     let newSelectedEntityType = event.target.value;
     setSelectedEntityType(newSelectedEntityType);
-    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType])
-      .sort((a, b) => collator.compare(a.Name, b.Name));
-    saveEntities(filteredEntitiesData);
+    let storeEntityType = storeEntityTypes[newSelectedEntityType];
+    let storeEntitiesData = storeEntities[storeEntityType.collectionName];
+    saveActiveEntities(storeEntitiesData);
     setSelectedEntityIndex(0);
-    saveSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
+    saveSelectedEntity(storeEntitiesData[selectedEntityIndex]);
   };
 
   const EntityListItem = ({ entity, index }) =>
@@ -83,7 +81,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveE
         ))}
       </Select>
       <List>
-        {entities.map((entity, index) => (
+        {activeEntities.map((entity, index) => (
           <EntityListItem
             key={index}
             index={index}

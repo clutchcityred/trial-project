@@ -64,6 +64,16 @@ export const actions = {
 
 // :: Reducer
 const initialState = {
+  entityTypes: {
+    "Asset": { displayName: "Asset", collectionName: "assets"},
+    "Block": { displayName: "Block", collectionName: "blocks"},
+    "Compartment": { displayName: "Compartment", collectionName: "compartments"},
+    "Field": { displayName: "Field", collectionName: "fields"},
+    "Hydrodynamic Unit": { displayName: "Unit", collectionName: "hydrodynamicUnits"},
+    "Layer": { displayName: "Layer", collectionName: "layers"},
+    "Section": { displayName: "Section", collectionName: "sections"},
+    "Well": { displayName: "Well", collectionName: "wells"}
+  },
   assets: [],
   blocks: [],
   compartments: [],

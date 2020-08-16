@@ -1,5 +1,6 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
+import _ from 'lodash';
 
 import {
   AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight,
@@ -11,6 +12,21 @@ import hierarchy from '../data/hierarchy.json';
 import hierarchy2 from '../data/hierarchy2.json';
 
 export default function EntitiesTable({ selectedEntity, entities }) {
+
+  useEffect(() => {
+    getHierarchyPath(hierarchy, "HierarchyPath");
+    getHierarchyPath(hierarchy2, "Hierarchy2Path");
+  });
+
+  const getHierarchyPath = (hierarchyData, pathProperty) => {
+    let hierarchyTree = treeify(hierarchyData.Relationship, 'title', 'parent', 'children');
+    let flattenedHierarchy = flattenMyTree(hierarchyTree);
+
+    _.forEach(entities, function(entity) {
+      let entityInHierarchy = _.find(flattenedHierarchy, ['title', entity.Name]);
+      entity[pathProperty] = entityInHierarchy ? entityInHierarchy.pathname : null;
+    })
+  }
 
   return (
     <div>
@@ -25,6 +41,8 @@ export default function EntitiesTable({ selectedEntity, entities }) {
           { title: 'Name', field: 'Name' },
           { title: 'Entity', field: 'EntityTypeName' },
           { title: 'Alias', field: 'Alias' },
+          { title: 'Hierarcy Path', field: 'HierarchyPath' },
+          { title: 'Hierarcy 2 Path', field: 'Hierarchy2Path' },
         ]}
         data={entities}
         title="Demo Title"
@@ -52,4 +70,38 @@ const tableIcons = {
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+};
+
+function flattenMyTree(tree) {
+  function recurse(nodes, path) {
+      return _.map(nodes, function(node) {
+          var newPath = _.union(path, [node.title]);
+          return [
+              _.assign({pathname: newPath.join(' > '), level: path.length}, _.omit(node, 'children')),
+              recurse(node.children, newPath)
+          ];
+      });
+  }
+  return _.flattenDeep(recurse(tree, []));
+}
+
+function treeify(list, idAttr, parentAttr, childrenAttr) {
+  if (!idAttr) idAttr = 'id';
+  if (!parentAttr) parentAttr = 'parent';
+  if (!childrenAttr) childrenAttr = 'children';
+
+  var treeList = [];
+  var lookup = {};
+  list.forEach(function (obj) {
+    lookup[obj[idAttr]] = obj;
+    obj[childrenAttr] = [];
+  });
+  list.forEach(function (obj) {
+    if (obj[parentAttr] != null) {
+      lookup[obj[parentAttr]][childrenAttr].push(obj);
+    } else {
+      treeList.push(obj);
+    }
+  });
+  return treeList;
 };

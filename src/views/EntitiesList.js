@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-  makeStyles, Divider, List,
-  ListItem, ListItemText, Select, MenuItem
+  makeStyles, List, ListItem, ListItemText, Select, MenuItem
 } from '@material-ui/core'
 import _ from 'lodash';
 import entitiesData from '../data/entities.json';

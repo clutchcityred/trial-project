@@ -40,10 +40,14 @@ export default function App() {
   const classes = useStyles()
   const { currentTheme, setTheme } = useContext(CustomThemeContext)
   const isDark = Boolean(currentTheme === 'dark')
-  const [selectedEntity, setSelectedEntity] = useState(null);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedEntity, setSelectedEntity] = useState(null);
   const saveSelectedEntity = (entity) => {
     setSelectedEntity(entity);
+  }
+  const [entities, setEntities] = useState([]);
+  const saveEntities = (entities) => {
+    setEntities(entities);
   }
 
   const handleThemeChange = (event) => {
@@ -76,7 +80,12 @@ export default function App() {
         }}
       >
         <Toolbar />
-        <EntitiesList saveSelectedEntity={saveSelectedEntity} selectedEntity={selectedEntity} />
+        <EntitiesList
+          saveSelectedEntity={saveSelectedEntity}
+          selectedEntity={selectedEntity}
+          saveEntities={saveEntities}
+          entities={entities}
+        />
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
@@ -99,7 +108,10 @@ export default function App() {
           />
         </Tabs>
         {selectedTab === 0 && <Hierarchy selectedEntity={selectedEntity} />}
-        {selectedTab === 1 && <EntitiesTable selectedEntity={selectedEntity} />}
+        {selectedTab === 1 && <EntitiesTable
+          selectedEntity={selectedEntity}
+          entities={entities}
+        />}
         {selectedTab === 2 && <Test />}
       </main>
     </div>

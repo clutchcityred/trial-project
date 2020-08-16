@@ -77,3 +77,6 @@ https://github.com/infonomic/material-ui-theme-switcher
 
 ### Tree view
 https://github.com/frontend-collective/react-sortable-tree
+
+### Table
+https://material-table.com/#/

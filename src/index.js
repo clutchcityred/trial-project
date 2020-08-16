@@ -16,8 +16,8 @@ const loadEntitiesJson = (store) => {
   let entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
   _.forEach(entityTypes, function (entityType) {
     let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityType]);
-    console.log(entityType);
-    console.log(filteredEntitiesData);
+    // console.log(entityType);
+    // console.log(filteredEntitiesData);
     switch (entityType) {
       case "Asset": store.dispatch(actions.entities.setAssets(filteredEntitiesData)); break;
       case "Block": store.dispatch(actions.entities.setBlocks(filteredEntitiesData)); break;

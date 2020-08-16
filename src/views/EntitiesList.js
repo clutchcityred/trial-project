@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import {
   makeStyles, List, ListItem, ListItemText, Select, MenuItem
 } from '@material-ui/core'
-import _ from 'lodash';
-import entitiesData from '../data/entities.json';
+import _ from 'lodash'
+import entitiesData from '../data/entities.json'
 
 const useStyles = makeStyles(() => ({
   drawerContainer: {
@@ -16,11 +17,14 @@ let entityTypes = [];
 
 export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveEntities, entities }) {
   const classes = useStyles()
+  const storeEntities = useSelector(state => state.entities)
   const [selectedEntityType, setSelectedEntityType] = useState("");
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
 
   useEffect(() => {
     entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
+    console.log('storeEntities');
+    console.log(storeEntities);
   });
 
   useEffect(() => {

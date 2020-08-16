@@ -40,7 +40,7 @@ export default function App() {
   const classes = useStyles()
   const { currentTheme, setTheme } = useContext(CustomThemeContext)
   const isDark = Boolean(currentTheme === 'dark')
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(1);
   const [selectedEntity, setSelectedEntity] = useState(null);
   const saveSelectedEntity = (entity) => {
     setSelectedEntity(entity);

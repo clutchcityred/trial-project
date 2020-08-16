@@ -4,29 +4,8 @@ import {
 } from '@material-ui/core'
 import SortableTree from 'react-sortable-tree';
 import 'react-sortable-tree/style.css'; // This only needs to be imported once in your app
-import hierarchy from './data/hierarchy.json';
-import hierarchy2 from './data/hierarchy2.json';
-
-function treeify(list, idAttr, parentAttr, childrenAttr) {
-  if (!idAttr) idAttr = 'id';
-  if (!parentAttr) parentAttr = 'parent';
-  if (!childrenAttr) childrenAttr = 'children';
-
-  var treeList = [];
-  var lookup = {};
-  list.forEach(function (obj) {
-    lookup[obj[idAttr]] = obj;
-    obj[childrenAttr] = [];
-  });
-  list.forEach(function (obj) {
-    if (obj[parentAttr] != null) {
-      lookup[obj[parentAttr]][childrenAttr].push(obj);
-    } else {
-      treeList.push(obj);
-    }
-  });
-  return treeList;
-};
+import hierarchy from '../data/hierarchy.json';
+import hierarchy2 from '../data/hierarchy2.json';
 
 const hierarchies = [hierarchy, hierarchy2];
 
@@ -154,3 +133,24 @@ export default function Hierarchy({ selectedEntity }) {
     </div>
   );
 }
+
+function treeify(list, idAttr, parentAttr, childrenAttr) {
+  if (!idAttr) idAttr = 'id';
+  if (!parentAttr) parentAttr = 'parent';
+  if (!childrenAttr) childrenAttr = 'children';
+
+  var treeList = [];
+  var lookup = {};
+  list.forEach(function (obj) {
+    lookup[obj[idAttr]] = obj;
+    obj[childrenAttr] = [];
+  });
+  list.forEach(function (obj) {
+    if (obj[parentAttr] != null) {
+      lookup[obj[parentAttr]][childrenAttr].push(obj);
+    } else {
+      treeList.push(obj);
+    }
+  });
+  return treeList;
+};

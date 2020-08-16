@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import {
-  makeStyles, Divider, List,
-  ListItem, ListItemText, Select, MenuItem
+  makeStyles, List, ListItem, ListItemText, Select, MenuItem
 } from '@material-ui/core'
 import _ from 'lodash';
-import entitiesData from './data/entities.json';
+import entitiesData from '../data/entities.json';
 
 const useStyles = makeStyles(() => ({
   drawerContainer: {
@@ -13,12 +12,10 @@ const useStyles = makeStyles(() => ({
 }))
 
 const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
-
 let entityTypes = [];
 
-export default function EntitiesList({ saveSelectedEntity, selectedEntity }) {
+export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveEntities, entities }) {
   const classes = useStyles()
-  const [entities, setEntities] = useState([]);
   const [selectedEntityType, setSelectedEntityType] = useState("");
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
 
@@ -29,7 +26,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity }) {
   useEffect(() => {
     setSelectedEntityType(entityTypes[selectedEntityIndex]);
     let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityTypes[selectedEntityIndex]]);
-    setEntities(filteredEntitiesData);
+    saveEntities(filteredEntitiesData);
     saveSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
   }, []);
 
@@ -43,7 +40,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity }) {
     setSelectedEntityType(newSelectedEntityType);
     let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', newSelectedEntityType])
       .sort((a, b) => collator.compare(a.Name, b.Name));
-    setEntities(filteredEntitiesData);
+    saveEntities(filteredEntitiesData);
     setSelectedEntityIndex(0);
     saveSelectedEntity(filteredEntitiesData[selectedEntityIndex]);
   };

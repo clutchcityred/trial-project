@@ -12,6 +12,7 @@
     "material-table": "^1.68.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-paginated-list": "^1.0.5",
     "react-redux": "^7.2.1",
     "react-scripts": "3.4.3",
     "react-sortable-tree": "^2.8.0",

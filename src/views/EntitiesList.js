@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import {
   makeStyles, List, ListItem, ListItemText, Select, MenuItem
 } from '@material-ui/core'
-import _ from 'lodash'
+import { PaginatedList } from 'react-paginated-list'
 import entitiesData from '../data/entities.json'
 
 const useStyles = makeStyles(() => ({
@@ -21,9 +21,12 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
   const storeEntityTypes = useSelector(state => state.entities.entityTypes)
   const [selectedEntityType, setSelectedEntityType] = useState("");
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(15);
 
   useEffect(() => {
     entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
+    setPageSize(15);
   });
 
   useEffect(() => {
@@ -32,9 +35,14 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
     saveSelectedEntity(storeEntities.assets[selectedEntityIndex]);
   }, []);
 
+  const handlePageChange = (items, currentPage) => {
+    setCurrentPage(currentPage);
+  };
+
   const handleListItemClick = (event, index) => {
-    setSelectedEntityIndex(index);
-    saveSelectedEntity(activeEntities[index]);
+    let selectedIndex = (currentPage - 1) * pageSize + index;
+    setSelectedEntityIndex(selectedIndex);
+    saveSelectedEntity(activeEntities[selectedIndex]);
   };
 
   const handleEntityTypeChange = (event) => {
@@ -61,8 +69,8 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
     <div className={classes.drawerContainer}>
       {
         selectedEntity ?
-        <h1>{selectedEntity.Name}</h1>
-        : false
+          <h1>{selectedEntity.Name}</h1>
+          : false
       }
       <Select
         labelId="entity-type-select-label"
@@ -81,13 +89,22 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
         ))}
       </Select>
       <List>
-        {activeEntities.map((entity, index) => (
-          <EntityListItem
-            key={index}
-            index={index}
-            entity={entity}
-          />
-        ))}
+        <PaginatedList
+          list={activeEntities}
+          itemsPerPage={pageSize}
+          onPageChange={handlePageChange}
+          renderList={(list) => (
+            <>
+              {list.map((entity, index) => (
+                <EntityListItem
+                  key={index}
+                  index={index}
+                  entity={entity}
+                />
+              ))}
+            </>
+          )}
+        />
       </List>
     </div>
   )

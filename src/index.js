@@ -7,7 +7,8 @@ import CustomThemeProvider from './themes/CustomThemeProvider'
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { reducers, actions } from './reducers';
+// import { reducers, actions } from './reducers';
+import { reducer, actions } from './reducers/entities';
 
 import _ from 'lodash';
 import entitiesData from './data/entities.json';
@@ -34,9 +35,7 @@ const loadEntitiesJson = () => {
   }
 }
 
-const store = createStore(reducers(
-  applyMiddleware(thunk),
-));
+const store = createStore(reducer, applyMiddleware(thunk));
 // store.subscribe();
 // store.dispatch(loadEntitiesJson);
 

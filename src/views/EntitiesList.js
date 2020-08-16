@@ -4,7 +4,6 @@ import {
   makeStyles, List, ListItem, ListItemText, Select, MenuItem
 } from '@material-ui/core'
 import { PaginatedList } from 'react-paginated-list'
-import entitiesData from '../data/entities.json'
 
 const useStyles = makeStyles(() => ({
   drawerContainer: {
@@ -14,19 +13,19 @@ const useStyles = makeStyles(() => ({
 
 export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveActiveEntities, activeEntities }) {
   const classes = useStyles()
-  const storeEntities = useSelector(state => state.entities)
-  const storeEntityTypes = useSelector(state => state.entities.entityTypes)
+  const entities = useSelector(state => state.entities)
+  const entityTypes = useSelector(state => state.entities.entityTypes)
   const [selectedEntityType, setSelectedEntityType] = useState("");
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);
 
   useEffect(() => {
-    let initialEntityType = Object.values(storeEntityTypes)[selectedEntityIndex];
+    let initialEntityType = Object.values(entityTypes)[selectedEntityIndex];
     setSelectedEntityType(initialEntityType);
-    let storeEntitiesData = storeEntities[initialEntityType.collectionName];
-    saveActiveEntities(storeEntitiesData);
-    saveSelectedEntity(storeEntitiesData[selectedEntityIndex]);
+    let entitiesData = entities[initialEntityType.collectionName];
+    saveActiveEntities(entitiesData);
+    saveSelectedEntity(entitiesData[selectedEntityIndex]);
   }, []);
 
   const handlePageChange = (items, currentPage) => {
@@ -40,13 +39,14 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
   };
 
   const handleEntityTypeChange = (event) => {
-    setCurrentPage(1);
     let newSelectedEntityType = event.target.value;
     setSelectedEntityType(newSelectedEntityType);
-    let storeEntitiesData = storeEntities[newSelectedEntityType.collectionName];
-    saveActiveEntities(storeEntitiesData);
-    setSelectedEntityIndex(0);
-    saveSelectedEntity(storeEntitiesData[selectedEntityIndex]);
+    let entitiesData = entities[newSelectedEntityType.collectionName];
+    saveActiveEntities(entitiesData);
+    let resetEntityIndex = 0;
+    setSelectedEntityIndex(resetEntityIndex);
+    saveSelectedEntity(entitiesData[resetEntityIndex]);
+    setCurrentPage(1);
   };
 
   const EntityListItem = ({ entity, index }) =>
@@ -72,7 +72,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
         value={selectedEntityType}
         onChange={handleEntityTypeChange}
       >
-        {Object.values(storeEntityTypes).map((entityType, index) => (
+        {Object.values(entityTypes).map((entityType, index) => (
           <MenuItem
             key={index}
             className="entityTypeMenuItem"

@@ -4,8 +4,8 @@ import {
 } from '@material-ui/core'
 import SortableTree from 'react-sortable-tree';
 import 'react-sortable-tree/style.css'; // This only needs to be imported once in your app
-import hierarchy from './data/hierarchy.json';
-import hierarchy2 from './data/hierarchy2.json';
+import hierarchy from '../data/hierarchy.json';
+import hierarchy2 from '../data/hierarchy2.json';
 
 function treeify(list, idAttr, parentAttr, childrenAttr) {
   if (!idAttr) idAttr = 'id';

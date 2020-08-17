@@ -2,7 +2,6 @@
 const constants = {
   SET_HIERARCHIES: 'ENTITIES_SET_HIERARCHIES',
   SET_HIERARCHY_NAMES: 'ENTITIES_SET_HIERARCHY_NAMES',
-  SET_SELECTED_HIERARCHY: 'ENTITIES_SET_SELECTED_HIERARCHY',
 }
 
 // :: Actions
@@ -19,19 +18,12 @@ export const actions = {
       payload: hierarchyNames
     }
   },
-  setSelectedHierarchy: (selectedHierarchy) => {
-    return {
-      type: constants.SET_SELECTED_HIERARCHY,
-      payload: selectedHierarchy
-    }
-  },
 };
 
 // :: Reducer
 const initialState = {
   hierarchies: [],
   hierarchyNames: [],
-  selectedHierarchy: {},
 };
 
 export function reducer(state = initialState, action) {
@@ -56,17 +48,6 @@ export function reducer(state = initialState, action) {
       let newHierarchyNames = action.payload;
       return Object.assign({}, state, {
         hierarchyNames: newHierarchyNames
-      });
-
-    case constants.SET_SELECTED_HIERARCHY:
-      if (!action.payload) {
-        return Object.assign({}, state, {
-          selectedHierarchy: {}
-        });
-      };
-      let newSelectedHierarchy = action.payload;
-      return Object.assign({}, state, {
-        selectedHierarchy: newSelectedHierarchy
       });
 
     default:

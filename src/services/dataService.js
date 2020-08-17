@@ -14,7 +14,7 @@ export const loadJSONs = (store) => {
   let hierarchies = [];
   let reflattenedHierarchies = [];
 
-  _.forEach(hierarchyJSONs, function (hierarchyData) {
+  hierarchyJSONs.forEach(function (hierarchyData) {
     let hierarchyTree = treeify(hierarchyData.Relationship);
     let hierarchy = {
       "name": hierarchyData.Name,
@@ -32,21 +32,19 @@ export const loadJSONs = (store) => {
 
   store.dispatch(actions.hierarchies.setHierarchies(hierarchies));
   store.dispatch(actions.hierarchies.setHierarchyNames(hierarchyNames));
-  store.dispatch(actions.hierarchies.setSelectedHierarchy(hierarchies[0]));
 
   // entities
   let entityTypes = [...new Set(entitiesJSON.map(entity => entity.EntityTypeName))].sort();
 
-  _.forEach(entitiesJSON, function (entity) {
-    _.forEach(reflattenedHierarchies, function (flattenedHierarchy) {
+  // store paths from hierarchies with each entity
+  entitiesJSON.forEach(function (entity) {
+    reflattenedHierarchies.forEach(function (flattenedHierarchy) {
       let entityInHierarchy = _.find(flattenedHierarchy.list, ['title', entity.Name]);
       entity[flattenedHierarchy.name] = entityInHierarchy ? entityInHierarchy.pathname : null;
     })
   })
 
-  console.log(entitiesJSON);
-
-  _.forEach(entityTypes, function (entityType) {
+  entityTypes.forEach(function (entityType) {
     let filteredEntitiesData = _.filter(entitiesJSON, ['EntityTypeName', entityType])
       .sort((a, b) => collator.compare(a.Name, b.Name));
 

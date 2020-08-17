@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react'
 import { useSelector } from 'react-redux'
 import MaterialTable from 'material-table'
-import _ from 'lodash';
 
 import {
   AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight,
@@ -19,7 +18,7 @@ export default function EntitiesTable({ selectedEntity, activeEntities }) {
       { title: 'Entity', field: 'EntityTypeName' },
       { title: 'Alias', field: 'Alias' },
     ];
-    _.forEach(hierarchyNames, function(hierarchyName) {
+    hierarchyNames.forEach(function(hierarchyName) {
       columns.push({ title: hierarchyName, field: hierarchyName });
     });
     return columns;

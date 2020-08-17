@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import {
   Select, MenuItem
 } from '@material-ui/core'
@@ -10,6 +11,7 @@ import hierarchy2 from '../data/hierarchy2.json';
 const hierarchies = [hierarchy, hierarchy2];
 
 export default function Hierarchy({ selectedEntity }) {
+  const selectedStoreHierarchy = useSelector(state => state.hierarchies.selectedHierarchy);
   const [selectedHierarchy, setSelectedHierarchy] = useState([]);
   const [treeData, setTreeData] = useState([]);
   const [searchQuery, setSearchQuery] = useState(null);
@@ -17,6 +19,7 @@ export default function Hierarchy({ selectedEntity }) {
   const [searchFoundCount, setSearchFoundCount] = useState(null);
 
   useEffect(() => {
+    console.log(selectedStoreHierarchy);
     setSelectedHierarchy(hierarchies[0]);
     setTreeData(treeify(hierarchies[0].Relationship, 'title', 'parent', 'children'));
   }, []);

@@ -7,33 +7,13 @@ import CustomThemeProvider from './themes/CustomThemeProvider'
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { reducers, actions } from './reducers';
+import { reducers } from './reducers';
 
-import _ from 'lodash';
-import entitiesData from './data/entities.json';
-
-const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
-const loadEntitiesJson = (store) => {
-  let entityTypes = [...new Set(entitiesData.map(entity => entity.EntityTypeName))].sort();
-  _.forEach(entityTypes, function (entityType) {
-    let filteredEntitiesData = _.filter(entitiesData, ['EntityTypeName', entityType])
-      .sort((a, b) => collator.compare(a.Name, b.Name));;
-    switch (entityType) {
-      case "Asset": store.dispatch(actions.entities.setAssets(filteredEntitiesData)); break;
-      case "Block": store.dispatch(actions.entities.setBlocks(filteredEntitiesData)); break;
-      case "Compartment": store.dispatch(actions.entities.setCompartments(filteredEntitiesData)); break;
-      case "Field": store.dispatch(actions.entities.setFields(filteredEntitiesData)); break;
-      case "Hydrodynamic Unit": store.dispatch(actions.entities.setHydrodynamicUnits(filteredEntitiesData)); break;
-      case "Layer": store.dispatch(actions.entities.setLayers(filteredEntitiesData)); break;
-      case "Section": store.dispatch(actions.entities.setSections(filteredEntitiesData)); break;
-      case "Well": store.dispatch(actions.entities.setWells(filteredEntitiesData)); break;
-      default: console.log("unknown entity type found");
-    }
-  })
-}
+import { loadEntitiesJSON, loadHierarchyJSONs } from './services/dataService'
 
 const store = createStore(reducers, applyMiddleware(thunk));
-loadEntitiesJson(store);
+loadEntitiesJSON(store);
+loadHierarchyJSONs(store);
 
 ReactDOM.render(
   <CustomThemeProvider>

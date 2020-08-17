@@ -1,4 +1,5 @@
-import React, { forwardRef, useState, useEffect } from 'react'
+import React, { forwardRef } from 'react'
+import { useSelector } from 'react-redux'
 import MaterialTable from 'material-table'
 import _ from 'lodash';
 
@@ -8,24 +9,20 @@ import {
   Remove, SaveAlt, Search, ViewColumn
 } from '@material-ui/icons';
 
-import hierarchy from '../data/hierarchy.json';
-import hierarchy2 from '../data/hierarchy2.json';
-
 export default function EntitiesTable({ selectedEntity, activeEntities }) {
+  const hierarchyNames = useSelector(state => state.hierarchies.hierarchyNames);
 
-  useEffect(() => {
-    getHierarchyPath(hierarchy, "HierarchyPath");
-    getHierarchyPath(hierarchy2, "Hierarchy2Path");
-  });
-
-  const getHierarchyPath = (hierarchyData, pathProperty) => {
-    let hierarchyTree = treeify(hierarchyData.Relationship, 'title', 'parent', 'children');
-    let flattenedHierarchy = flattenMyTree(hierarchyTree);
-
-    _.forEach(activeEntities, function(entity) {
-      let entityInHierarchy = _.find(flattenedHierarchy, ['title', entity.Name]);
-      entity[pathProperty] = entityInHierarchy ? entityInHierarchy.pathname : null;
-    })
+  const getColumns = () => {
+    console.log(activeEntities);
+    let columns = [
+      { title: 'Name', field: 'Name' },
+      { title: 'Entity', field: 'EntityTypeName' },
+      { title: 'Alias', field: 'Alias' },
+    ];
+    _.forEach(hierarchyNames, function(hierarchyName) {
+      columns.push({ title: hierarchyName, field: hierarchyName });
+    });
+    return columns;
   }
 
   return (
@@ -37,13 +34,7 @@ export default function EntitiesTable({ selectedEntity, activeEntities }) {
           : false
       }
       <MaterialTable
-        columns={[
-          { title: 'Name', field: 'Name' },
-          { title: 'Entity', field: 'EntityTypeName' },
-          { title: 'Alias', field: 'Alias' },
-          { title: 'Hierarcy Path', field: 'HierarchyPath' },
-          { title: 'Hierarcy 2 Path', field: 'Hierarchy2Path' },
-        ]}
+        columns={getColumns()}
         data={activeEntities}
         title="Demo Title"
         icons={tableIcons}
@@ -70,38 +61,4 @@ const tableIcons = {
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-};
-
-function flattenMyTree(tree) {
-  function recurse(nodes, path) {
-      return _.map(nodes, function(node) {
-          var newPath = _.union(path, [node.title]);
-          return [
-              _.assign({pathname: newPath.join(' > '), level: path.length}, _.omit(node, 'children')),
-              recurse(node.children, newPath)
-          ];
-      });
-  }
-  return _.flattenDeep(recurse(tree, []));
-}
-
-function treeify(list, idAttr, parentAttr, childrenAttr) {
-  if (!idAttr) idAttr = 'id';
-  if (!parentAttr) parentAttr = 'parent';
-  if (!childrenAttr) childrenAttr = 'children';
-
-  var treeList = [];
-  var lookup = {};
-  list.forEach(function (obj) {
-    lookup[obj[idAttr]] = obj;
-    obj[childrenAttr] = [];
-  });
-  list.forEach(function (obj) {
-    if (obj[parentAttr] != null) {
-      lookup[obj[parentAttr]][childrenAttr].push(obj);
-    } else {
-      treeList.push(obj);
-    }
-  });
-  return treeList;
 };

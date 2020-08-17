@@ -5,13 +5,51 @@ import entitiesJSON from '../data/entities.json'
 import hierarchyJSON from '../data/hierarchy.json'
 import hierarchy2JSON from '../data/hierarchy2.json'
 
+let hierarchyJSONs = [hierarchyJSON, hierarchy2JSON];
+
 const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 
-export const loadEntitiesJSON = (store) => {
+export const loadJSONs = (store) => {
+  // hierarchies
+  let hierarchies = [];
+  let reflattenedHierarchies = [];
+
+  _.forEach(hierarchyJSONs, function (hierarchyData) {
+    let hierarchyTree = treeify(hierarchyData.Relationship);
+    let hierarchy = {
+      "name": hierarchyData.Name,
+      "tree": hierarchyTree,
+    };
+    let reflattenedHierarchy = {
+      "name": hierarchyData.Name,
+      "list": flattenMyTree(hierarchyTree),
+    };
+    hierarchies.push(hierarchy);
+    reflattenedHierarchies.push(reflattenedHierarchy);
+  });
+
+  let hierarchyNames = hierarchies.map(hierarchy => hierarchy.name);
+
+  store.dispatch(actions.hierarchies.setHierarchies(hierarchies));
+  store.dispatch(actions.hierarchies.setHierarchyNames(hierarchyNames));
+  store.dispatch(actions.hierarchies.setSelectedHierarchy(hierarchies[0]));
+
+  // entities
   let entityTypes = [...new Set(entitiesJSON.map(entity => entity.EntityTypeName))].sort();
+
+  _.forEach(entitiesJSON, function (entity) {
+    _.forEach(reflattenedHierarchies, function (flattenedHierarchy) {
+      let entityInHierarchy = _.find(flattenedHierarchy.list, ['title', entity.Name]);
+      entity[flattenedHierarchy.name] = entityInHierarchy ? entityInHierarchy.pathname : null;
+    })
+  })
+
+  console.log(entitiesJSON);
+
   _.forEach(entityTypes, function (entityType) {
     let filteredEntitiesData = _.filter(entitiesJSON, ['EntityTypeName', entityType])
       .sort((a, b) => collator.compare(a.Name, b.Name));
+
     switch (entityType) {
       case "Asset": store.dispatch(actions.entities.setAssets(filteredEntitiesData)); break;
       case "Block": store.dispatch(actions.entities.setBlocks(filteredEntitiesData)); break;
@@ -24,22 +62,4 @@ export const loadEntitiesJSON = (store) => {
       default: console.log("unknown entity type found");
     }
   })
-}
-
-let hierarchyJSONs = [hierarchyJSON, hierarchy2JSON];
-
-export const loadHierarchyJSONs = (store) => {
-  let hierarchies = [];
-
-  _.forEach(hierarchyJSONs, function (hierarchyData) {
-    let hierarchyTree = treeify(hierarchyData.Relationship);
-    let hierarchy = {
-      "name": hierarchyData.Name,
-      "tree": hierarchyTree,
-    };
-    hierarchies.push(hierarchy);
-  });
-
-  store.dispatch(actions.hierarchies.setHierarchies(hierarchies));
-  store.dispatch(actions.hierarchies.setSelectedHierarchy(hierarchies[0]));
 }

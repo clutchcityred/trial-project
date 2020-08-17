@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import {
-  Select, MenuItem
-} from '@material-ui/core'
+import { Select, MenuItem } from '@material-ui/core'
 import SortableTree from 'react-sortable-tree';
 import 'react-sortable-tree/style.css'; // This only needs to be imported once in your app
 

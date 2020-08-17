@@ -9,11 +9,10 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducers } from './reducers';
 
-import { loadEntitiesJSON, loadHierarchyJSONs } from './services/dataService'
+import { loadJSONs } from './services/dataService'
 
 const store = createStore(reducers, applyMiddleware(thunk));
-loadEntitiesJSON(store);
-loadHierarchyJSONs(store);
+loadJSONs(store);
 
 ReactDOM.render(
   <CustomThemeProvider>

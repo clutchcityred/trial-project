@@ -5,13 +5,9 @@ import {
 } from '@material-ui/core'
 import SortableTree from 'react-sortable-tree';
 import 'react-sortable-tree/style.css'; // This only needs to be imported once in your app
-import hierarchy from '../data/hierarchy.json';
-import hierarchy2 from '../data/hierarchy2.json';
-
-const hierarchies = [hierarchy, hierarchy2];
 
 export default function Hierarchy({ selectedEntity }) {
-  const selectedStoreHierarchy = useSelector(state => state.hierarchies.selectedHierarchy);
+  const hierarchies = useSelector(state => state.hierarchies.hierarchies);
   const [selectedHierarchy, setSelectedHierarchy] = useState([]);
   const [treeData, setTreeData] = useState([]);
   const [searchQuery, setSearchQuery] = useState(null);
@@ -19,16 +15,19 @@ export default function Hierarchy({ selectedEntity }) {
   const [searchFoundCount, setSearchFoundCount] = useState(null);
 
   useEffect(() => {
-    console.log(selectedStoreHierarchy);
-    setSelectedHierarchy(hierarchies[0]);
-    setTreeData(treeify(hierarchies[0].Relationship, 'title', 'parent', 'children'));
+    if (hierarchies) {
+      saveHierarchy(hierarchies[0]);
+    }
   }, []);
+
+  const saveHierarchy = (hierarchy) => {
+    setSelectedHierarchy(hierarchy);
+    setTreeData(hierarchy.tree);
+  }
 
   const handleHierarchyChange = (event) => {
     let newSelectedHierarchy = event.target.value;
-    setSelectedHierarchy(newSelectedHierarchy);
-    setTreeData(treeify(newSelectedHierarchy.Relationship, 'title', 'parent', 'children'));
-    setSearchQuery('Field');
+    saveHierarchy(newSelectedHierarchy);
   };
 
   // // Case insensitive search of `node.title`
@@ -76,34 +75,29 @@ export default function Hierarchy({ selectedEntity }) {
             className="hierarchyMenuItem"
             value={hierarchy}
           >
-            {hierarchy.Name}
+            {hierarchy.name}
           </MenuItem>
         ))}
       </Select>
 
       <form
         style={{ display: 'inline-block' }}
-        onSubmit={event => {
-          event.preventDefault();
-        }}
+        onSubmit={event => { event.preventDefault(); }}
       >
-
         <button
           type="button"
           disabled={!searchFoundCount}
           onClick={selectPrevMatch}
         >
           &lt;
-          </button>
-
+        </button>
         <button
           type="submit"
           disabled={!searchFoundCount}
           onClick={selectNextMatch}
         >
           &gt;
-          </button>
-
+        </button>
         <span>
           &nbsp;
             {searchFoundCount > 0 ? searchFocusIndex + 1 : 0}
@@ -111,7 +105,6 @@ export default function Hierarchy({ selectedEntity }) {
             {searchFoundCount || 0}
         </span>
       </form>
-
       <SortableTree
         treeData={treeData}
         onChange={treeData => setTreeData(treeData)}
@@ -136,24 +129,3 @@ export default function Hierarchy({ selectedEntity }) {
     </div>
   );
 }
-
-function treeify(list, idAttr, parentAttr, childrenAttr) {
-  if (!idAttr) idAttr = 'id';
-  if (!parentAttr) parentAttr = 'parent';
-  if (!childrenAttr) childrenAttr = 'children';
-
-  var treeList = [];
-  var lookup = {};
-  list.forEach(function (obj) {
-    lookup[obj[idAttr]] = obj;
-    obj[childrenAttr] = [];
-  });
-  list.forEach(function (obj) {
-    if (obj[parentAttr] != null) {
-      lookup[obj[parentAttr]][childrenAttr].push(obj);
-    } else {
-      treeList.push(obj);
-    }
-  });
-  return treeList;
-};

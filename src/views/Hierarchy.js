@@ -8,7 +8,6 @@ export default function Hierarchy({ selectedEntity }) {
   const hierarchies = useSelector(state => state.hierarchies.hierarchies);
   const [selectedHierarchy, setSelectedHierarchy] = useState([]);
   const [treeData, setTreeData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(null);
   const [searchFocusIndex, setSearchFocusIndex] = useState(0);
   const [searchFoundCount, setSearchFoundCount] = useState(null);
 
@@ -27,11 +26,6 @@ export default function Hierarchy({ selectedEntity }) {
     let newSelectedHierarchy = event.target.value;
     saveHierarchy(newSelectedHierarchy);
   };
-
-  // // Case insensitive search of `node.title`
-  // const customSearchMethod = ({ node, searchQuery }) => {
-  //   searchQuery && node.title.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
-  // }
 
   const selectPrevMatch = () => {
     setSearchFocusIndex(
@@ -121,7 +115,7 @@ export default function Hierarchy({ selectedEntity }) {
         searchFinishCallback={matches => searchFinishCallback(matches)}
         //
         // This prop only expands the nodes that are seached.
-        onlyExpandSearchedNodes
+        // onlyExpandSearchedNodes
         style={{ color: "black" }}
       />
     </div>

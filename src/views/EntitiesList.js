@@ -19,7 +19,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
   const [selectedListIndex, setSelectedListIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(15);
+  const [pageSize, setPageSize] = useState(0);
 
   useEffect(() => {
     let initialEntityType = Object.values(entityTypes)[selectedEntityIndex];
@@ -27,6 +27,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
     let entitiesData = entities[initialEntityType.collectionName];
     saveActiveEntities(entitiesData);
     saveSelectedEntity(entitiesData[selectedEntityIndex]);
+    setPageSize(15);
   }, []);
 
   const handlePageChange = (items, currentPage) => {

@@ -9,7 +9,6 @@ import { CustomThemeContext } from './themes/CustomThemeProvider'
 import EntitiesList from './views/EntitiesList'
 import EntitiesTable from './views/EntitiesTable'
 import Hierarchy from './views/Hierarchy'
-import Test from './views/Test'
 
 const drawerWidth = 350
 
@@ -103,16 +102,12 @@ export default function App() {
           <Tab
             label="Table"
           />
-          <Tab
-            label="Test"
-          />
         </Tabs>
         {selectedTab === 0 && <Hierarchy selectedEntity={selectedEntity} />}
         {selectedTab === 1 && <EntitiesTable
           selectedEntity={selectedEntity}
           activeEntities={activeEntities}
         />}
-        {selectedTab === 2 && <Test />}
       </main>
     </div>
   )

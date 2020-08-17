@@ -17,6 +17,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
   const entityTypes = useSelector(state => state.entities.entityTypes)
   const [selectedEntityType, setSelectedEntityType] = useState("");
   const [selectedEntityIndex, setSelectedEntityIndex] = useState(0);
+  const [selectedListIndex, setSelectedListIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);
 
@@ -34,6 +35,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
 
   const handleListItemClick = (event, index) => {
     let selectedIndex = (currentPage - 1) * pageSize + index;
+    setSelectedListIndex(index);
     setSelectedEntityIndex(selectedIndex);
     saveSelectedEntity(activeEntities[selectedIndex]);
   };
@@ -44,6 +46,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
     let entitiesData = entities[newSelectedEntityType.collectionName];
     saveActiveEntities(entitiesData);
     let resetEntityIndex = 0;
+    setSelectedListIndex(resetEntityIndex);
     setSelectedEntityIndex(resetEntityIndex);
     saveSelectedEntity(entitiesData[resetEntityIndex]);
     setCurrentPage(1);
@@ -53,7 +56,7 @@ export default function EntitiesList({ saveSelectedEntity, selectedEntity, saveA
     <ListItem
       className="entity"
       button
-      selected={selectedEntityIndex === index}
+      selected={selectedListIndex === index}
       onClick={(event) => handleListItemClick(event, index)}
     >
       <ListItemText primary={entity.Name} />

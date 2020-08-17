@@ -12,7 +12,6 @@ export default function EntitiesTable({ selectedEntity, activeEntities }) {
   const hierarchyNames = useSelector(state => state.hierarchies.hierarchyNames);
 
   const getColumns = () => {
-    console.log(activeEntities);
     let columns = [
       { title: 'Name', field: 'Name' },
       { title: 'Entity', field: 'EntityTypeName' },
